@@ -2,10 +2,14 @@ package main
 
 import "fmt"
 
+type ChangerMobile interface {
+	Changing10V()
+}
+
 type IOSChanger struct {
 }
 
-type Socket struct {
+type AndroidChanger struct {
 }
 
 func (ios *IOSChanger) Changing15V() {
@@ -16,14 +20,23 @@ type IOSAdapter struct {
 	ios *IOSChanger
 }
 
-func (iosAdapter *IOSAdapter) Changer10V() {
+func (iosAdapter *IOSAdapter) Changing10V() {
 	iosAdapter.ios.Changing15V()
 }
 
-func (s *Socket) Changer10V() {
+func (s *AndroidChanger) Changing10V() {
+	fmt.Println("Android Changing to 10V")
 }
 
 func main() {
 	ios := &IOSAdapter{&IOSChanger{}}
-	ios.Changer10V()
+	android := &AndroidChanger{}
+
+	var changer []ChangerMobile
+	changer = append(changer, ios)
+	changer = append(changer, android)
+
+	for _, v := range changer {
+		v.Changing10V()
+	}
 }
